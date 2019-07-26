@@ -1,0 +1,26 @@
+From: Jason Rhinelander <jason@imaginary.ca>
+Date: Thu, 25 Jul 2019 21:33:22 -0300
+Subject: replace net/if.h with linux/if.h
+
+xenial has issues if both linux/if.h and net/if.h get included.
+---
+ llarp/net/net.cpp | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/llarp/net/net.cpp b/llarp/net/net.cpp
+index 010797d..b0a3ac3 100644
+--- a/llarp/net/net.cpp
++++ b/llarp/net/net.cpp
+@@ -9,8 +9,12 @@
+ #ifndef ANDROID
+ #include <ifaddrs.h>
+ #endif
++#ifdef Linux
++#include <linux/if.h>
++#else
+ #include <net/if.h>
+ #endif
++#endif
+ 
+ #include <net/net_addr.hpp>
+ #include <net/ip.hpp>
