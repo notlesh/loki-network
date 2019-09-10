@@ -4,3 +4,4 @@
 0004-Reduce-required-cmake-version.patch
 0005-replace-net-if.h-with-linux-if.h.patch
 0004-Make-root-bootstraps-to-system-path.patch
+0005-Move-default-user-group-into-deb-patch.patch
