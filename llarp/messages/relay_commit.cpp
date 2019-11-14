@@ -409,7 +409,7 @@ namespace llarp
         // we are the farthest hop
         llarp::LogDebug("We are the farthest hop for ", info);
         // send a LRSM down the path
-        self->context->logic()->queue_func([=]() {
+        LogicCall(self->context->logic(), [=]() {
           SendPathConfirm(self);
           self->decrypter = nullptr;
         });
@@ -418,7 +418,7 @@ namespace llarp
       {
         // forward upstream
         // we are still in the worker thread so post job to logic
-        self->context->logic()->queue_func([=]() {
+        LogicCall(self->context->logic(), [=]() {
           SendLRCM(self);
           self->decrypter = nullptr;
         });
