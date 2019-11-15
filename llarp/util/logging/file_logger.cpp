@@ -15,7 +15,7 @@ namespace llarp
       if(not maybe_line.has_value())
         break;
       const auto &line = maybe_line.value();
-      if(fprintf(f, "%s\n", line.c_str()) > 0)
+      if(fprintf(f, "%s\n", line.c_str()) >= 0)
         wrote_stuff = true;
     } while(true);
 
