@@ -40,6 +40,9 @@ namespace llarp
     Lines_t m_Lines;
 
    private:
+    static void
+    Flush(Lines_t* const, FILE* const);
+
     bool
     ShouldFlush(llarp_time_t now) const;
 
