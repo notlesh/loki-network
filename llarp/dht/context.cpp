@@ -23,6 +23,7 @@
 #include <router/i_rc_lookup_handler.hpp>
 #include <util/decaying_hashset.hpp>
 #include <vector>
+#include "util/status.hpp"
 
 namespace llarp
 {
@@ -558,6 +559,15 @@ namespace llarp
           {"nodes", _nodes->ExtractStatus()},
           {"services", _services->ExtractStatus()},
           {"ourKey", ourKey.ToHex()}};
+
+      util::StatusObject gossipFilterObj;
+      m_GossipReplayFilter.Visit([&](const RouterContact rc, llarp_time_t time)
+        {
+          gossipFilterObj[rc.pubkey.ToString()] = time;
+        });
+
+      obj["gossipReplayFilter"] = gossipFilterObj;
+
       return obj;
     }
 
