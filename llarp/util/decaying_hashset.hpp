@@ -65,6 +65,18 @@ namespace llarp
         m_CacheInterval = interval;
       }
 
+      /// return the insertion time of the inserted value,
+      /// or 0 if it isn't found
+      llarp_time_t
+      GetInsertionTime(const Val_t& val) const
+      {
+        auto itr = m_Values.find(val);
+        if (itr == m_Values.end())
+          return 0;
+        else
+          return itr->second;
+      }
+
      private:
       llarp_time_t m_CacheInterval;
       std::unordered_map< Val_t, llarp_time_t, Hash_t > m_Values;

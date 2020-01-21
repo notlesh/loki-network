@@ -41,3 +41,32 @@ TEST_F(DecayingHashSetTest, TestDecay)
   hashset.Decay(now + timeout + 1);
   ASSERT_FALSE(hashset.Contains(zero));
 }
+
+TEST_F(DecayingHashSetTest, TestGetInsertionTime_ReturnsZeroOnNoValueFound)
+{
+  llarp::util::DecayingHashSet<std::string, std::hash<std::string>> hashset;
+
+  EXPECT_FALSE(hashset.Contains("foo"));
+  EXPECT_EQ(0, hashset.GetInsertionTime("foo"));
+}
+
+TEST_F(DecayingHashSetTest, TestGetInsertionTime_UpdatesEveryInsert)
+{
+  static constexpr llarp_time_t timeout = 5;
+  const llarp_time_t now = llarp::time_now_ms();
+
+  llarp::util::DecayingHashSet<std::string, std::hash<std::string>> hashset(timeout);
+
+  EXPECT_FALSE(hashset.Contains("foo"));
+  EXPECT_TRUE(hashset.Insert("foo", now));
+  EXPECT_EQ(now, hashset.GetInsertionTime("foo"));
+
+  hashset.Decay(now + timeout + 1);
+
+  EXPECT_FALSE(hashset.Contains("foo"));
+
+  const llarp_time_t newNow = llarp::time_now_ms();
+  EXPECT_TRUE(hashset.Insert("foo", newNow));
+  EXPECT_EQ(newNow, hashset.GetInsertionTime("foo"));
+}
+
