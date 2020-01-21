@@ -126,7 +126,12 @@ namespace llarp
       return false;
     if(!enckey.BEncode(buf))
       return false;
-
+    // write router version if not empty
+    if(not routerVersion.IsEmpty())
+    {
+      if(not BEncodeWriteDictEntry("r", routerVersion, buf))
+        return false;
+    }
     /* write last updated */
     if(!bencode_write_bytestring(buf, "u", 1))
       return false;
@@ -160,6 +165,7 @@ namespace llarp
     nickname.Zero();
     enckey.Zero();
     pubkey.Zero();
+    routerVersion.Clear();
     last_updated = 0;
   }
 
@@ -176,7 +182,10 @@ namespace llarp
     {
       obj["nickname"] = Nick();
     }
-
+    if(not routerVersion.IsEmpty())
+    {
+      obj["routerVersion"] = routerVersion.ToString();
+    }
     return obj;
   }
 
@@ -191,6 +200,9 @@ namespace llarp
       return false;
 
     if(!BEncodeMaybeReadDictEntry("k", pubkey, read, key, buf))
+      return false;
+
+    if(!BEncodeMaybeReadDictEntry("r", routerVersion, read, key, buf))
       return false;
 
     if(key == "n")
