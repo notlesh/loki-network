@@ -70,3 +70,29 @@ TEST_F(DecayingHashSetTest, TestGetInsertionTime_UpdatesEveryInsert)
   EXPECT_EQ(newNow, hashset.GetInsertionTime("foo"));
 }
 
+TEST_F(DecayingHashSetTest, TestVisit_VisitsAll)
+{
+  llarp::util::DecayingHashSet<std::string, std::hash<std::string>> hashset;
+
+  // build a map of objects to insert
+  std::unordered_map<std::string, llarp_time_t> original;
+  original["foo"] = 1;
+  original["bar"] = 2;
+  original["baz"] = 4;
+
+  for (auto itr = original.begin(); itr != original.end(); ++itr)
+  {
+    EXPECT_TRUE(hashset.Insert(itr->first, itr->second));
+  }
+
+  // rebuild a new map by visiting each object
+  std::unordered_map<std::string, llarp_time_t> visited;
+  hashset.Visit([&](const std::string& val, llarp_time_t time)
+    {
+      visited[val] = time;
+    });
+
+  // and compare original map to new one
+  EXPECT_EQ(original, visited);
+
+}

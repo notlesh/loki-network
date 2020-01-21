@@ -3,6 +3,7 @@
 
 #include <util/time.hpp>
 #include <unordered_map>
+#include <functional>
 
 namespace llarp
 {
@@ -75,6 +76,16 @@ namespace llarp
           return 0;
         else
           return itr->second;
+      }
+
+      /// Visit each value in the set along with its insertion time
+      using VisitFunc = std::function<void(const Val_t&, llarp_time_t)>;
+      void Visit(VisitFunc visit) const
+      {
+        for (auto itr = m_Values.begin(); itr != m_Values.end(); ++itr)
+        {
+          visit(itr->first, itr->second);
+        }
       }
 
      private:
