@@ -171,6 +171,61 @@ namespace llarp
     return out << "[privatekey]";
   }
 
+  /// A subkey differs from a normal, root-level key in that it stores the actual ed25519 private
+  /// scalar as well as different randomness for key signing.
+  ///
+  /// A normal ed25519 "private key" (as libsodium treats it) is really a seed that generates both
+  /// the private scalar and randomness from the hash of the seed.
+  ///
+  /// Since our subkeys aren't generated from seed, we need another way to generate them, and also
+  /// a way to explicitly store them. This class accomplishes this by storing the 32 byte scalar
+  /// alongside the random value.
+  struct SubSecretKey final : public AlignedBuffer< 64 >
+  {
+    SubSecretKey() = default;
+
+    explicit SubSecretKey(const AlignedBuffer< 32 > &scalar)
+    {
+      SetScalar(scalar);
+    }
+
+    /// Sets the scalar and recalculates random value
+    bool
+    SetScalar(const AlignedBuffer< 32 > &scalar);
+
+    /// Regenerates the random value used in signing
+    bool
+    Recalculate();
+
+    /// Returns a pointer to the scalar (secret)
+    byte_t*
+    GetScalar() { return data(); }
+
+    /// Returns a pointer to the random value
+    byte_t*
+    GetRandomValue() { return data() + 32; }
+
+    /// Computes the public key
+    bool
+    toPublic(PubKey& pubkey) const;
+
+    // prevent printing our secret
+    std::ostream &
+    print(std::ostream &stream, int level, int spaces) const
+    {
+      Printer printer(stream, level, spaces);
+      printer.printValue("privatesubkey");
+      return stream;
+    }
+  };
+
+  inline std::ostream &
+  operator<<(std::ostream &out, const SubSecretKey &)
+  {
+    // return out << k.ToHex();
+    // make sure we never print out private keys
+    return out << "[subsecretkey]";
+  }
 
   /// IdentitySecret is a secret key from a service node secret seed
   struct IdentitySecret final : public AlignedBuffer< 32 >

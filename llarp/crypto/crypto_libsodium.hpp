@@ -48,6 +48,9 @@ namespace llarp
       /// ed25519 sign
       bool
       sign(Signature &, const SecretKey &, const llarp_buffer_t &) override;
+      /// ed25519-ish sign (uses different source of randomness, e.g. Tor's blinding technique)
+      bool
+      sign(Signature &, const SubSecretKey &, const llarp_buffer_t &) override;
       /// ed25519 verify
       bool
       verify(const PubKey &, const llarp_buffer_t &,

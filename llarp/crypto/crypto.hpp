@@ -60,6 +60,9 @@ namespace llarp
     /// ed25519 sign
     virtual bool
     sign(Signature &, const SecretKey &, const llarp_buffer_t &) = 0;
+    /// ed25519-ish sign (uses different source of randomness, e.g. Tor's blinding technique)
+    virtual bool
+    sign(Signature &, const SubSecretKey &, const llarp_buffer_t &) = 0;
     /// ed25519 verify
     virtual bool
     verify(const PubKey &, const llarp_buffer_t &, const Signature &) = 0;

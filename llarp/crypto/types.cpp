@@ -88,6 +88,34 @@ namespace llarp
   }
 
   bool
+  SubSecretKey::SetScalar(const AlignedBuffer< 32 > &scalar)
+  {
+    memcpy(data(), scalar.data(), scalar.size());
+    return Recalculate();
+  }
+
+  bool
+  SubSecretKey::Recalculate()
+  {
+    unsigned char buffer[64];
+
+    // calculate hash of our scalar (stored in the first 32 bytes)
+    // TODO: mix in other data (e.g. static string)
+    if (crypto_hash_sha512(buffer, data(), 32))
+      return false;
+
+    // copy second half of hash to the second half of our data
+    memcpy(data() + 32, buffer + 32, 32);
+    return true;
+  }
+
+  bool
+  SubSecretKey::toPublic(PubKey& pubkey) const
+  {
+    return crypto_scalarmult_ed25519_base_noclamp(pubkey.data(), data()) != -1;
+  }
+
+  bool
   SecretKey::SaveToFile(const char* fname) const
   {
     std::array< byte_t, 128 > tmp;
