@@ -87,7 +87,8 @@ namespace llarp
 
       // identify closest 4 routers
       static constexpr size_t StorageRedundancy = 4;
-      auto closestRCs = dht.GetRouter()->nodedb()->FindClosestTo(addr, StorageRedundancy);
+      auto closestRCs =
+          dht.GetRouter()->nodedb()->FindClosestTo(addr, StorageRedundancy);
       if(closestRCs.size() != StorageRedundancy)
       {
         llarp::LogWarn("Received PublishIntroMessage but only know ",
@@ -140,7 +141,7 @@ namespace llarp
       else
       {
         int candidateNumber = -1;
-        int index = 0;
+        int index           = 0;
         for(const auto &rc : closestRCs)
         {
           if(rc.pubkey == dht.OurKey())
