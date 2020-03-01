@@ -31,7 +31,7 @@ namespace tooling
 
   std::string GotIntroReceivedEvent::ToString() const
   {
-    return RouterEvent::ToString() + "from " + From.ShortHex() + " location=" + Introset.derivedSigningKey.ShortHex() + " order=" + std::to_string(RelayOrder) + " txid=" + std::to_string(TxID);
+    return RouterEvent::ToString() + "from " + From.ShortHex() + " location=" + Introset.derivedSigningKey.ShortHex() + " txid=" + std::to_string(TxID);
   }
 
 }

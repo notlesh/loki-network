@@ -31,7 +31,6 @@ namespace tooling
     py::class_<GotIntroReceivedEvent, RouterEvent>(mod, "DhtGotIntroReceievedEvent")
     .def_readonly("from", &GotIntroReceivedEvent::From)
     .def_readonly("location", &GotIntroReceivedEvent::Introset)
-      .def_readonly("relayOrder", &GotIntroReceivedEvent::RelayOrder)
       .def_readonly("txid", &GotIntroReceivedEvent::TxID);
   }
 

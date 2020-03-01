@@ -30,8 +30,6 @@ namespace tooling
 
   struct GotIntroReceivedEvent : public RouterEvent
   {
-    // TODO: thought: why not just use the original message object here?
-    // TODO: question: what ties this to the actual logic that knows an event occurred?
     GotIntroReceivedEvent(
       const llarp::RouterID & ourRouter,
       const llarp::dht::Key_t & from,
@@ -40,7 +38,6 @@ namespace tooling
     
     llarp::dht::Key_t From;
     llarp::service::EncryptedIntroSet Introset;
-    uint64_t RelayOrder;
     uint64_t TxID;
     std::string ToString() const override;
   };
