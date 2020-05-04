@@ -43,7 +43,7 @@ namespace llarp
     addr4() const;
 
     bool
-    FromString(std::string_view str);
+    from_char_array(std::string_view str);
 
     bool
     from_4int(const uint8_t one, const uint8_t two, const uint8_t three, const uint8_t four);
