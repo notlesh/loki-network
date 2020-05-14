@@ -34,10 +34,8 @@ list(APPEND GTEST_SRC
     routing/test_llarp_routing_obtainexitmessage.cpp
     service/test_llarp_service_address.cpp
     service/test_llarp_service_identity.cpp
-    test_libabyss.cpp
     test_llarp_encrypted_frame.cpp
     test_llarp_router_contact.cpp
-    test_md5.cpp
     util/meta/test_llarp_util_memfn.cpp
     util/meta/test_llarp_util_traits.cpp
     util/test_llarp_util_aligned.cpp

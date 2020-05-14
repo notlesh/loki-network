@@ -176,7 +176,6 @@ set(LIB_SRC
   routing/path_latency_message.cpp
   routing/path_transfer_message.cpp
   routing/transfer_traffic_message.cpp
-  rpc/rpc.cpp
   service/address.cpp
   service/async_key_exchange.cpp
   service/context.cpp
@@ -213,7 +212,7 @@ endif()
 add_library(${STATIC_LIB} STATIC ${LIB_SRC})
 
 target_include_directories(${STATIC_LIB} PUBLIC ${CURL_INCLUDE_DIRS})
-target_link_libraries(${STATIC_LIB} PUBLIC cxxopts ${ABYSS_LIB} ${PLATFORM_LIB} ${UTIL_LIB} ${CRYPTOGRAPHY_LIB})
+target_link_libraries(${STATIC_LIB} PUBLIC cxxopts ${PLATFORM_LIB} ${UTIL_LIB} ${CRYPTOGRAPHY_LIB})
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
   target_include_directories(${PLATFORM_LIB} SYSTEM PUBLIC /usr/local/include)
@@ -223,7 +222,7 @@ endif()
 if(WITH_SHARED)
   add_library(${SHARED_LIB} SHARED ${LIB_SRC})
   set(LIBS ${LIBS} Threads::Threads)
-  target_link_libraries(${SHARED_LIB} PUBLIC cxxopts ${ABYSS_LIB} ${CRYPTOGRAPHY_LIB} ${UTIL_LIB} ${PLATFORM_LIB} ${LIBS})
+  target_link_libraries(${SHARED_LIB} PUBLIC cxxopts ${CRYPTOGRAPHY_LIB} ${UTIL_LIB} ${PLATFORM_LIB} ${LIBS})
   if (WIN32)
     target_link_libraries(${SHARED_LIB} PUBLIC ws2_32 iphlpapi)
   else()

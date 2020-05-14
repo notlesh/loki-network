@@ -151,7 +151,6 @@ TARGETS = $(REPO)/lokinet
 SIGS = $(TARGETS:=.sig)
 EXE = $(BUILD_ROOT)/daemon/lokinet
 TEST_EXE = $(BUILD_ROOT)/test/testAll
-ABYSS_EXE = $(BUILD_ROOT)/abyss-main
 
 LINT_FILES = $(wildcard llarp/*.cpp)
 
@@ -305,11 +304,8 @@ mac-release: mac-release-configure
 mac: mac-release
 	$(MAKE) -C '$(BUILD_ROOT)' package
 
-abyss: debug
-	$(ABYSS_EXE)
-
 format:
-	$(FORMAT) -i $$(find jni daemon llarp include libabyss pybind | grep -E '\.[h,c](pp)?$$')
+	$(FORMAT) -i $$(find jni daemon llarp include pybind | grep -E '\.[h,c](pp)?$$')
 
 format-verify: format
 	(type $(FORMAT))
