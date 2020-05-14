@@ -278,8 +278,11 @@ if(SUBMODULE_CHECK)
     check_submodule(external/cxxopts)
     check_submodule(external/date)
     check_submodule(external/pybind11)
+    check_submodule(external/loki-mq)
   endif()
 endif()
+
+add_subdirectory(external/loki-mq EXCLUDE_FROM_ALL)
 
 # We only actually need pybind11 with WITH_HIVE, but if we don't load it here then something further
 # down loads a broken PythonInterp that loads Python2, but Python2 headers are not C++17 compatible.
