@@ -425,7 +425,11 @@ namespace llarp
 
     /// called by link when session is fully established
     bool
-    ConnectionEstablished(ILinkSession* session);
+    InboundConnectionEstablished(ILinkSession* session);
+    bool
+    OutboundConnectionEstablished(ILinkSession* session);
+    bool
+    ConnectionEstablished(ILinkSession* session, bool inbound);
 
     /// call internal router ticker
     void

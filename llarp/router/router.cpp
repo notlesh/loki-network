@@ -23,6 +23,7 @@
 #include <util/meta/memfn.hpp>
 #include <util/str.hpp>
 #include <ev/ev.hpp>
+#include <tooling/peer_stats_event.hpp>
 
 #include "tooling/router_event.hpp"
 #include "util/status.hpp"
@@ -528,7 +529,7 @@ namespace llarp
           util::memFn(&AbstractRouter::rc, this),
           util::memFn(&AbstractRouter::HandleRecvLinkMessageBuffer, this),
           util::memFn(&AbstractRouter::Sign, this),
-          util::memFn(&Router::ConnectionEstablished, this),
+          util::memFn(&Router::InboundConnectionEstablished, this),
           util::memFn(&AbstractRouter::CheckRenegotiateValid, this),
           util::memFn(&Router::ConnectionTimedOut, this),
           util::memFn(&AbstractRouter::SessionClosed, this),
@@ -820,14 +821,27 @@ namespace llarp
   }
 
   bool
-  Router::ConnectionEstablished(ILinkSession* session)
+  Router::InboundConnectionEstablished(ILinkSession* session)
   {
+    return ConnectionEstablished(session, true);
+  }
+
+  bool
+  Router::OutboundConnectionEstablished(ILinkSession* session)
+  {
+    return ConnectionEstablished(session, false);
+  }
+
+  bool
+  Router::ConnectionEstablished(ILinkSession* session, bool inbound)
+  {
+    RouterID id{session->GetPubKey()};
     if (m_peerDb)
     {
-      RouterID id{session->GetPubKey()};
       // TODO: make sure this is a public router (on whitelist)?
       m_peerDb->modifyPeerStats(id, [&](PeerStats& stats) { stats.numConnectionSuccesses++; });
     }
+    NotifyRouterEvent<tooling::LinkSessionEstablishedEvent>(pubkey(), id, inbound);
     return _outboundSessionMaker.OnSessionEstablished(session);
   }
 
@@ -1200,7 +1214,7 @@ namespace llarp
         util::memFn(&AbstractRouter::rc, this),
         util::memFn(&AbstractRouter::HandleRecvLinkMessageBuffer, this),
         util::memFn(&AbstractRouter::Sign, this),
-        util::memFn(&Router::ConnectionEstablished, this),
+        util::memFn(&Router::OutboundConnectionEstablished, this),
         util::memFn(&AbstractRouter::CheckRenegotiateValid, this),
         util::memFn(&Router::ConnectionTimedOut, this),
         util::memFn(&AbstractRouter::SessionClosed, this),

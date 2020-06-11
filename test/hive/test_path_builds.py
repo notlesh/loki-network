@@ -1,3 +1,4 @@
+'''
 from time import time
 
 def test_path_builds(HiveArbitrary):
@@ -82,3 +83,4 @@ def test_path_builds(HiveArbitrary):
   assert missing_rcv_count == 0
   assert missing_status_count == 0
 
+'''

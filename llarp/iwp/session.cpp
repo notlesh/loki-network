@@ -76,6 +76,7 @@ namespace llarp
       GotLIM = util::memFn(&Session::GotRenegLIM, this);
       m_RemoteRC = msg->rc;
       m_Parent->MapAddr(m_RemoteRC.pubkey, this);
+      std::cout << "<<< GotInboundLIM, sig: " << msg->Z << " <<<" << std::endl;
       return m_Parent->SessionEstablished(this);
     }
 
@@ -91,11 +92,12 @@ namespace llarp
       GotLIM = util::memFn(&Session::GotRenegLIM, this);
       auto self = shared_from_this();
       assert(self.use_count() > 1);
-      SendOurLIM([self](ILinkSession::DeliveryStatus st) {
+      SendOurLIM([self, msg](ILinkSession::DeliveryStatus st) {
         if (st == ILinkSession::DeliveryStatus::eDeliverySuccess)
         {
           self->m_State = State::Ready;
           self->m_Parent->MapAddr(self->m_RemoteRC.pubkey, self.get());
+          std::cout << ">>> GotOutboundLIM, sig: " << msg->Z << " >>>" << std::endl;
           self->m_Parent->SessionEstablished(self.get());
         }
       });

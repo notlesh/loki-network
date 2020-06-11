@@ -97,6 +97,7 @@ namespace llarp
     std::shared_ptr<ILinkSession>
     LinkLayer::NewOutboundSession(const RouterContact& rc, const AddressInfo& ai)
     {
+      std::cout << "MAKING NEW OUTBOUND SESSION" << std::endl;
       return std::make_shared<Session>(this, rc, ai);
     }
   }  // namespace iwp
